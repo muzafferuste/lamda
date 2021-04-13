@@ -5,6 +5,16 @@ import java.util.List;
 
 public class Lambda01Kurallar {
 
+    /* Javada Lambda fonksiyonları sadece Fonksiyonel interface'ler ile kullanılabilir.
+    Sadece bir adet abstract metodu olan interface'lere fonksiyonel interface denilir.
+    Kullanıcı isterse kendi fonksiyonel interface'ini yazabilir. Ama Javada hali hazırda
+    Consumer, Function, Supplier, Predicate gibi tanımlanmış interfaceler bulunmaktadır.
+    Ayrıca bu interface'leri parametre olarak alabilen High Order Function (HOF)'lar da bulunmaktadır.
+    foreEach(), map(), filter(), reduce() gibi HOF'lar fonksiyonel interfaceler ile çalıştığı için
+    içerisinde Lambda fonksiyonları yazmak mümkündür.
+    Javada genelde bu gibi fonksiyonlar üzerinden Lambda ifadeleri kullanılmaktadır.
+     */
+
     public static void main(String[] args) {
 
         List<Integer> liste = Arrays.asList(1, 2, 3, 4, 5);
@@ -28,15 +38,12 @@ public class Lambda01Kurallar {
 
         System.out.println("\n === Veri tipi kullanılırsa : Explicit ==");
         System.out.println("Dizinin Elemanlarının 2 katını yazdır.");
-
         liste.forEach((Integer x) -> System.out.print(x * 2 + " "));
 
         System.out.println("\nLambda ifadesinde dış değişkenler kullanalıbilir");
         System.out.println("Ancak bu değişken Final gibi davranır.");
-
         int deger = 6;
-
-        liste.forEach(t -> System.out.println(t + deger));
+        liste.forEach(t -> System.out.print(t + deger + " "));
 
         // Metot Refransı =====> Class adı :: Metot adı
         System.out.println("\nJavanın Method referansını kullanabiliriz");
@@ -52,7 +59,6 @@ public class Lambda01Kurallar {
     public static void yazdır(int x) {
 
         System.out.print(x + " ");
-
     }
 
 }
