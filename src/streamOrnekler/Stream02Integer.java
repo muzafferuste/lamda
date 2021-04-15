@@ -50,4 +50,9 @@ public class Stream02Integer {
         return l.stream().filter(Stream01Integer::tekMi).map(x->x*x*x).reduce(0, Integer::sum);
     }
 
+    public static int buyukBul(List<Integer> list) {
+
+        return list.stream().reduce(0, (x, y)-> x > y ? x : y);
+    }
+
 }
