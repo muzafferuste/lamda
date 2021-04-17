@@ -41,14 +41,18 @@ public class Stream04String {
     // ORNEK16: Listedeki baş harfi A ile başlayan isimleri yazdıran metodu tanımlayalım..
     //********************************************************************************************
     public static void aIleBaslayanlar(List<String> liste) {
-        liste.stream().filter(h -> h.startsWith("A")).forEach(System.out::println);
+        liste.stream()
+                .filter(h -> h.startsWith("A"))
+                .forEach(System.out::println);
     }
 
     //********************************************************************************************
     // ORNEK17: Listedeki tüm isimleri büyük harfe çeviren metodu tanımlayalım..
     //********************************************************************************************
     public static void buyukHarfeCevir(List<String> liste) {
-        liste.stream().map(h -> h.toUpperCase()).forEach(System.out::println);
+        liste.stream()
+                .map(h -> h.toUpperCase())
+                .forEach(System.out::println);
     }
 
     //********************************************************************************************

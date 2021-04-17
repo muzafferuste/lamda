@@ -30,9 +30,9 @@ public class Stream02Integer {
     // map() metodu collection üzerinde bir transformation işlemi sağlayan ara işlem metodudur.
     // Eğer bir collectionın verilerininin değişik hallerini hesaplama istersek map() kullanabiliriz.
 
-    public static void tekKareYazdir(List <Integer> l){
+    public static void tekKareYazdir(List<Integer> l) {
 
-        l.stream().distinct().filter(Stream01Integer::tekMi).map(x->x*x).forEach(Stream01Integer::yazdir);
+        l.stream().distinct().filter(Stream01Integer::tekMi).map(x -> x * x).forEach(Stream01Integer::yazdir);
 
     }
 
@@ -43,16 +43,16 @@ public class Stream02Integer {
     // reduce() bir terminal işlemidir. Stream hattını kapatır ve tek bir sonuç üretir.
     // Collection'ı indirgeme işlemini lambda fonksiyonu veya metot refransı ile yapabiliriz.
 
-    public static Integer tekKupToplami(List <Integer> l){
+    public static Integer tekKupToplami(List<Integer> l) {
 
         //  return l.stream().filter(Stream01Integer::tekMi).map(x->x*x*x).reduce(0,(x,y)-> (x+y));
         //  return l.stream().filter(Stream01Integer::tekMi).map(x->x*x*x).reduce(Math::addExact);
-        return l.stream().filter(Stream01Integer::tekMi).map(x->x*x*x).reduce(0, Integer::sum);
+        return l.stream().filter(Stream01Integer::tekMi).map(x -> x * x * x).reduce(0, Integer::sum);
     }
 
     public static int buyukBul(List<Integer> list) {
 
-        return list.stream().reduce(0, (x, y)-> x > y ? x : y);
+        return list.stream().reduce(0, (x, y) -> x > y ? x : y);
     }
 
 }
