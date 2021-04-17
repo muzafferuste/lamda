@@ -8,6 +8,10 @@ public class Methodlar {
         System.out.print(x + " ");
     }
 
+    public static void StrYazdir(String x) {
+        System.out.print(x + " ");
+    }
+
     public static boolean tekMi(int x) {
         return x % 2 != 0;
     }
