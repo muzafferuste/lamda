@@ -2,162 +2,142 @@ package streamProje01;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Main {
 
-    private static List<Ogrenci> ogreciListesi = new ArrayList();
-    private static List<Ogrenci> tempList = new ArrayList<>();
+    public static List<Ogrenci> ogrListesi = new ArrayList<>();
 
     public static void main(String[] args) {
-
-        testOgrenciOlustu();
-        System.out.println("=======Isme gore listele=======");
+        testOgrenciOlustur();
+        notaGoreSirala(3, 6);
+        yasaGoreSirala();
         ismeGoreListele("ahmet");
-        System.out.println("=======Isme gore listele gecersiz isim ile deneme=======");
-        ismeGoreListele("john");
-        System.out.println("=======Soy isme gore listele=======");
+        ismeGoreListele("John");
+        ismeGoreListele("ayşe");
         soyIsmeGoreListele("can");
-        System.out.println("=======Soy isme gore listele gecersiz soyisim ile deneme=======");
-        soyIsmeGoreListele("mehmet");
-        System.out.println("=======Cinsiyete gore listele=======");
+        cinsiyeteGoreListele("kadın");
         cinsiyeteGoreListele("erkek");
-        System.out.println("=======Cinsiyete gore listele gecersiz cinsiyet ile deneme=======");
-        cinsiyeteGoreListele("belirtmek istemiyorum");
-        System.out.println("=======Diploma Notuna gore sirala (artan)=======");
-        notaGoreSiralaArtan();
-        System.out.println("=======Diploma Notuna gore sirala (azalan)=======");
-        notaGoreSiralaAzalan();
-        System.out.println("=======Yasa gore sirala (artan)=======");
-        yasaGoreSiralaArtan();
-        System.out.println("=======Yasa gore sirala (azalan)=======");
-        yasaGoreSiralaAzalan();
-        System.out.println("=======Sinifin ortalama diploma notu=======");
-        sinifinOrtalamaDiplomaNotu();
-
-
+        yasaVeCinsiyeteGoreSirala(20, "erkek");
+        yasaVeCinsiyeteGoreSirala(30, "kadın");
+        System.out.println("SINIF ORTALAMASI:" + sinifOrtalamsiHesapla1());
+        System.out.println("SINIF ORTALAMASI:" + sinifOrtalamsiHesapla2());
+        sinifOrtalamsiHesapla3();
+        ismeGoreOgrenciSil("Ahmet");
     }
 
-    private static void testOgrenciOlustu() {
-
-        ogreciListesi.add(new Ogrenci("Ahmet", "Can", 30, 95.5, "erkek"));
-        ogreciListesi.add(new Ogrenci("Ahmet", "Baki", 18, 90.1, "erkek"));
-        ogreciListesi.add(new Ogrenci("Ayse", "Can", 21, 82.3, "kadin"));
-        ogreciListesi.add(new Ogrenci("Mustafa", "Can", 15, 75.4, "erkek"));
-        ogreciListesi.add(new Ogrenci("Ayse", "Yilmaz", 40, 45, "kadin"));
-        ogreciListesi.add(new Ogrenci("Ali", "Veli", 80, 35.5, "erkek"));
-        ogreciListesi.add(new Ogrenci("Veli", "Ozturk", 20, 95.5, "erkek"));
-
+    //Öğrenci notlarını alt ve üst limitlere göre sıralayarak  yazdıran metot (Önr: 3-5. sıradakileri göster.)
+    private static void notaGoreSirala(int alt, int ust) {
+        System.out.println("\n============ NOTA GÖRE SIRALAMA ============");
+        System.out.println("~~~~~" + alt + "-" + ust + ". SIRADAKİLER ~~~");
+        ogrListesi.stream().
+                sorted(Comparator.comparing(Ogrenci::getDiplomaNotu).reversed()).
+                skip(alt - 1).
+                limit(ust - alt + 1).
+                forEach(System.out::println);
     }
 
-    /* isim, soyisim ve cinsiyet'e gore siralama yaparken ilk basta bir tempList olusturuyorum
-    Olusturma sebebim en sonda verdigim argument'e gore veri var mi yok mu diye kontrol etmek icin
-    varsa yazdir yoksa "veri bulunamadi" yazdir diyebilmek icin.
-     */
+    //Öğrencileri yaşlarına göre sıralayark yazdıran metot.
+    private static void yasaGoreSirala() {
+        System.out.println("\n============ YAŞA GÖRE SIRALAMA ============");
+        ogrListesi.stream().
+                sorted(Comparator.comparing(Ogrenci::getYas).reversed()).
+                forEach(System.out::println);
+    }
 
+    //Öğrencileri belirli bir yaşa ve cinsiyete göre sıralayarak listeleyen metot.
+    private static void yasaVeCinsiyeteGoreSirala(int yas, String cinsiyet) {
+        System.out.println("\n============ YAŞ VE CİNSİYETE GÖRE SIRALA-LİSTELE ============");
+        ogrListesi.stream().
+                filter(t -> t.getYas() < yas).
+                filter(t -> t.getCinsiyet().equalsIgnoreCase(cinsiyet)).
+                sorted(Comparator.comparing(Ogrenci::getYas)).
+                forEach(System.out::println);
+    }
+
+    //Öğrencileri isimlerine göre yazdıran metot.
     private static void ismeGoreListele(String isim) {
-
-        tempList = ogreciListesi.stream().filter(t -> t.getAd().equalsIgnoreCase(isim)).collect(Collectors.toList());
-
-        // buradaki if else'i bir method olarak da olusturabilirdik ama boyle yazmak daha cok hosuma gitti :)
-        if (tempList.isEmpty()) {
-
-            System.out.println(isim + " ismine ait veri bulunamamistir.");
-
-        } else {
-
-            for (Ogrenci each :
-                    tempList) {
-                System.out.println(each);
-            }
-        }
-
+        System.out.println("\n============ " + isim.toUpperCase() + " ADINDAKİ ÖĞRENCİLER ============");
+        List<Ogrenci> liste = ogrListesi.stream().filter(t -> t.getAd().equalsIgnoreCase(isim)).collect(Collectors.toList());
+        listeYazdir(liste);
     }
 
+    //Öğrencileri soyisimlerine göre yazdıran metot.
     private static void soyIsmeGoreListele(String soyIsim) {
-
-        tempList = ogreciListesi.stream().filter(t -> t.getSoyad().equalsIgnoreCase(soyIsim)).collect(Collectors.toList());
-
-        // buradaki if else'i bir method olarak da olusturabilirdik ama boyle yazmak daha cok hosuma gitti :)
-        if (tempList.isEmpty()) {
-
-            System.out.println(soyIsim + " soy ismine ait veri bulunamamistir.");
-
-        } else {
-
-            for (Ogrenci each :
-                    tempList) {
-                System.out.println(each);
-            }
-        }
-
+        System.out.println("\n============ " + soyIsim.toUpperCase() + " SOYADINDAKİ ÖĞRENCİLER ============");
+        List<Ogrenci> liste = ogrListesi.stream().filter(t -> t.getSoyad().equalsIgnoreCase(soyIsim)).collect(Collectors.toList());
+        listeYazdir(liste);
     }
 
+    //Öğrencileri cinsiyetlerine göre yazdıran metot.
     private static void cinsiyeteGoreListele(String cinsiyet) {
+        System.out.println("\n============ " + cinsiyet.toUpperCase() + " ===============");
+        List<Ogrenci> liste = ogrListesi.stream().filter(t -> t.getCinsiyet().equalsIgnoreCase(cinsiyet)).collect(Collectors.toList());
+        listeYazdir(liste);
+    }
 
-        tempList = ogreciListesi.stream().filter(t -> t.getCinsiyet().equalsIgnoreCase(cinsiyet)).collect(Collectors.toList());
-
-        // buradaki if else'i bir method olarak da olusturabilirdik ama boyle yazmak daha cok hosuma gitti :)
-        if (tempList.isEmpty()) {
-
-            System.out.println(cinsiyet + " cinsiyetine ait veri bulunamamistir.");
-
+    //listeyi yazdırırken içinde veri var mı diye kontrol eden metot.
+    public static void listeYazdir(List<Ogrenci> liste) {
+        if ((liste.isEmpty())) {
+            System.out.print("Aranılan Öğrenci Bulunamadı");
         } else {
-
-            for (Ogrenci each :
-                    tempList) {
-                System.out.println(each);
-            }
+            liste.forEach(System.out::println);
         }
-
     }
 
-    private static void notaGoreSiralaArtan() {
-
-        ogreciListesi.stream() // sorted methodunu kullanarak ve Comparator class'indan yardim alarak siraliyorum
-                .sorted(Comparator.comparing(Ogrenci::getDiplomaNotu))
-                .forEach(System.out::println);
-
+    //reduce metoduyla ortalama hesaplama yöntemi
+    public static double sinifOrtalamsiHesapla1() {
+        double toplam = ogrListesi.stream().map(Ogrenci::getDiplomaNotu).reduce(0.0, Double::sum);
+        return toplam / ogrListesi.size();
     }
 
-    private static void notaGoreSiralaAzalan() {
-
-        ogreciListesi.stream() // sorted ile siraliyorum reversed ile tersine ceviriyorum
-                .sorted(Comparator.comparing(Ogrenci::getDiplomaNotu).reversed())
-                .forEach(System.out::println);
-
+    // average() yöntemiyle ortalama hesaplanabilir.average() yöntemini kullanmak için stream'i
+    // mapToDouble() yöntemi ile DoubleStream'e çevirmek gerekir. Ancak average() OptionalDouble
+    // veri tipi döndürür. orElse() metodunun kullanımı ile Optional veri tipi kulanmamıza gerek kalmaz.
+    public static double sinifOrtalamsiHesapla2() {
+        return ogrListesi.stream().mapToDouble(Ogrenci::getDiplomaNotu).average().orElse(Double.NaN);
     }
 
-    private static void yasaGoreSiralaArtan() {
-
-        ogreciListesi.stream() // sorted methodunu kullanarak ve Comparator class'indan yardim alarak siraliyorum
-                .sorted(Comparator.comparing(Ogrenci::getYas))
-                .forEach(System.out::println);
-
+    // DoubleStream için summaryStatistics() metodu ile stream içindeki
+    // bir çok sayısal veriler elde edilebilir.
+    public static void sinifOrtalamsiHesapla3() {
+        DoubleSummaryStatistics istatistik = ogrListesi.
+                stream().
+                mapToDouble(Ogrenci::getDiplomaNotu).
+                summaryStatistics();
+        System.out.println("========= SINIF DİPLOMA NOT İSTATİSTİKLERİ ===========");
+        System.out.println("SINIF ORTALAMASI:" + istatistik.getAverage());
+        System.out.println("KİŞİ SAYISI:" + istatistik.getCount());
+        System.out.println("MAKS ORTALAMA:" + istatistik.getMax());
+        System.out.println("MİN ORTALAMA:" + istatistik.getMin());
     }
 
-    private static void yasaGoreSiralaAzalan() {
-
-        ogreciListesi.stream() // sorted ile siraliyorum reversed ile tersine ceviriyorum
-                .sorted(Comparator.comparing(Ogrenci::getYas).reversed())
-                .forEach(System.out::println);
-
+    // Bir Collection'daki veriler stream'e çevirmeksizin removeIf() metoduyla silinebilir.
+    // removeIf bir lamba fonksiyonunu parametre olarak alabilir.
+    // removeIf bir ArrayList metodudur ve listeyi kalıcı olarak günceler.
+    public static void ismeGoreOgrenciSil(String isim) {
+        boolean silindiMi = ogrListesi.removeIf(t -> t.getAd().contains(isim));
+        System.out.println("\n=========== SİLME RAPORU =============");
+        if (silindiMi == true) {
+            System.out.println(isim + " isimli öğrenciler silindi");
+        } else {
+            System.out.println(isim + " isimli öğrenciler SİLİNEMEDİ");
+        }
     }
 
-    private static void sinifinOrtalamaDiplomaNotu() {
-
-        // avarage methodu bana bir deger dondurecegi icin ya
-        // return etmemiz lazim ya da direkt sout icine yazmamiz lazim
-        // return edersek OptionelDouble data turunu kullanmamiz gerekecek.
-        // return edersek de main method icerisinde tekrardan sout icine yazmamiz gerekecek
-        // bana en mantikli gelen yontem budur.
-
-        // NOT: bu sekilde yazdirinca sonuc "OptionalDouble[74.18571428571428]" seklinde olacaktir
-
-        System.out.println(ogreciListesi.stream()
-                .mapToDouble(Ogrenci::getDiplomaNotu)
-                .average());
+    //Test amaçlı Öğrenci nesneleri oluşturur.
+    private static void testOgrenciOlustur() {
+        ogrListesi.add(new Ogrenci("Ahmet", "Can", 30, 95.5, "erkek"));
+        ogrListesi.add(new Ogrenci("Ahmet", "Baki", 18, 90.1, "erkek"));
+        ogrListesi.add(new Ogrenci("Ayşe", "Can", 21, 82.3, "kadın"));
+        ogrListesi.add(new Ogrenci("Mustafa", "Can", 15, 75.4, "erkek"));
+        ogrListesi.add(new Ogrenci("Ayşe", "Yılmaz", 40, 45, "kadın"));
+        ogrListesi.add(new Ogrenci("Ali", "Veli", 80, 35.5, "erkek"));
+        ogrListesi.add(new Ogrenci("Veli", "Öztürk", 20, 95.5, "erkek"));
+        ogrListesi.add(new Ogrenci("Selim", "Yaş", 21, 95.5, "erkek"));
     }
+
 
 }
